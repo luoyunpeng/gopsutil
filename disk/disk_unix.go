@@ -12,19 +12,19 @@ import (
 // Usage returns a file system usage. path is a filesystem path such
 // as "/", not device file path like "/dev/vda1".  If you want to use
 // a return value of disk.Partitions, use "Mountpoint" not "Device".
-func Usage(path string) (*UsageStat, error) {
+func Usage(path string) (UsageStat, error) {
 	return UsageWithContext(context.Background(), path)
 }
 
-func UsageWithContext(ctx context.Context, path string) (*UsageStat, error) {
+func UsageWithContext(ctx context.Context, path string) (UsageStat, error) {
 	stat := unix.Statfs_t{}
 	err := unix.Statfs(path, &stat)
 	if err != nil {
-		return nil, err
+		return UsageStat{}, err
 	}
 	bsize := stat.Bsize
 
-	ret := &UsageStat{
+	ret := UsageStat{
 		Path:        unescapeFstab(path),
 		Fstype:      getFsType(stat),
 		Total:       (uint64(stat.Blocks) * uint64(bsize)),
