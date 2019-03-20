@@ -121,7 +121,7 @@ func InfoWithContext(ctx context.Context) ([]InfoStat, error) {
 
 	c := InfoStat{CPU: -1, Cores: 1}
 	for _, line := range lines {
-		fields := common.SplitToTwoColumns(line, ":")
+		fields := common.SplitToTwoColumns(line)
 		if len(fields) < 2 || fields[1] == "" {
 			continue
 		}
