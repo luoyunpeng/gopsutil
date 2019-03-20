@@ -100,12 +100,12 @@ func ReadLines(filename string) ([]string, error) {
 	return ReadLinesOffsetN(filename, 0, -1)
 }
 
-// SplitToTwoColumns splits string with sep, and zero alloc on heap
-func SplitToTwoColumns(line, sep string) [2]string {
+// SplitToTwoColumns splits string with char ':', and zero alloc on heap
+func SplitToTwoColumns(line string) [2]string {
 	var cols [2]string
 
 	for i, v := range line {
-		if v == int32(sep[0]) {
+		if v == ':' {
 			cols[0] = strings.TrimSpace(line[:i])
 			if i == len(line)-1 {
 				break
@@ -120,6 +120,9 @@ func SplitToTwoColumns(line, sep string) [2]string {
 // ReplaceSubString replace sub string with new, and zero alloc on heap
 func ReplaceSubString(s, old, new string) string {
 	if index := strings.Index(s, old); index != -1 {
+		if new == "" {
+			return s[:index]
+		}
 		return s[:index] + new
 	}
 	return s
@@ -139,16 +142,17 @@ func ReadLinesOffsetN(filename string, offset uint, n int) ([]string, error) {
 
 	ret := make([]string, 0, 32)
 
-	r := bufio.NewReaderSize(f, 2048)
+	r := bufio.NewReaderSize(f, 512)
 	for i := 0; i < n+int(offset) || n < 0; i++ {
-		line, err := r.ReadString('\n')
+		line, _, err := r.ReadLine()
 		if err != nil {
 			break
 		}
 		if i < int(offset) {
 			continue
 		}
-		ret = append(ret, strings.Trim(line, "\n"))
+		rl := string(line)
+		ret = append(ret, rl)
 	}
 
 	return ret, nil

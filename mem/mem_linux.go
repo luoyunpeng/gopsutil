@@ -39,7 +39,7 @@ func VirtualMemoryWithContext(ctx context.Context) (VirtualMemoryStat, error) {
 	sReclaimable := false // "SReclaimable:" not available: 2.6.19 / Nov 2006
 
 	for _, line := range lines {
-		fields := common.SplitToTwoColumns(line, ":")
+		fields := common.SplitToTwoColumns(line)
 		if len(fields) != 2 || fields[1] == "" {
 			continue
 		}
