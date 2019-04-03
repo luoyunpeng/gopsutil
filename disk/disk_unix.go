@@ -25,7 +25,7 @@ func UsageWithContext(ctx context.Context, path string) (UsageStat, error) {
 	bsize := stat.Bsize
 
 	ret := UsageStat{
-		Path:        unescapeFstab(path),
+		Path:        path,
 		Fstype:      getFsType(stat),
 		Total:       (uint64(stat.Blocks) * uint64(bsize)),
 		Free:        (uint64(stat.Bavail) * uint64(bsize)),
