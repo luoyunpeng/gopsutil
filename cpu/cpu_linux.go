@@ -173,11 +173,11 @@ func InfoWithContext(ctx context.Context) ([]InfoStat, error) {
 			c.Stepping = int32(t)
 		case "cpu MHz", "clock":
 			// treat this as the fallback value, thus we ignore error
-			if t, err := strconv.ParseFloat(strings.Replace(value, "MHz", "", 1), 64); err == nil {
+			if t, err := strconv.ParseFloat(common.ReplaceSubString(value, "MHz", ""), 64); err == nil {
 				c.Mhz = t
 			}
 		case "cache size":
-			t, err := strconv.ParseInt(strings.Replace(value, " KB", "", 1), 10, 64)
+			t, err := strconv.ParseInt(common.ReplaceSubString(value, " KB", ""), 10, 64)
 			if err != nil {
 				return ret, err
 			}
